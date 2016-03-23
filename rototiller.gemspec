@@ -19,8 +19,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov'
 
   #Documentation dependencies
-  s.add_development_dependency 'yard', '~> 0'
-  s.add_development_dependency 'markdown', '~> 0'
+  s.add_development_dependency 'yard'      , '~> 0'
+  s.add_development_dependency 'markdown'  , '~> 0'
+
+  # restrict version to enable ruby 1.9.3
+  s.add_development_dependency 'mime-types', '~> 2.0'
 
   #Run time dependencies
   s.add_runtime_dependency 'rake'
