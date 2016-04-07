@@ -28,20 +28,15 @@ task :acceptance => [:check_acceptance, :generate_host_config]do |t, args|
   config = ENV["BEAKER_CONFIG"]
 
   preserve_hosts = ENV["BEAKER_PRESERVEHOSTS"]
-  type = 'pe'
   keyfile = ENV["BEAKER_KEYFILE"]
   load_path = ENV["BEAKER_LOADPATH"]
   pre_suite = ENV["BEAKER_PRESUITE"]
   test_suite = ENV["BEAKER_TESTSUITE"]
 
   beaker = "bundle exec beaker "
-  beaker += " --xml"
   beaker += " --debug"
-  beaker += " --root-keys"
-  beaker += " --repo-proxy"
   beaker += " --preserve-hosts #{preserve_hosts}" if preserve_hosts != ''
-  beaker += " --config #{config}" if config != ''
-  beaker += " --type #{type}" if type != ''
+  beaker += " --hosts #{config}" if config != ''
   beaker += " --keyfile #{keyfile}" if keyfile != ''
   beaker += " --load-path #{load_path}" if load_path != ''
   beaker += " --pre-suite #{pre_suite}" if pre_suite != ''
