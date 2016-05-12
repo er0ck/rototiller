@@ -5,11 +5,14 @@ require 'rototiller/utilities/flag_collection'
 require 'rototiller/utilities/command_flag'
 require 'rototiller/utilities/command'
 require 'rototiller/utilities/block_syntax_object'
+require 'rototiller/utilities/deprecate'
 require 'rake/tasklib'
 
 module Rototiller
   module Task
     class RototillerTask < ::Rake::TaskLib
+      extend Deprecate
+
       #TODO rename instance vars and methods to not match sub blocks
       attr_reader :name
       attr_reader :command
@@ -56,27 +59,30 @@ module Rototiller
         add_param(@env_vars, EnvVar, attributes, args, {:set_env => true}, &block)
       end
 
-      # adds command line flags to be used in a command
-      # @param [Hash] *args hashes of information about the command line flag
-      # @option args [String] :name The command line flag
-      # @option args [String] :value The value for the command line flag
-      # @option args [String] :message A message describing the use of this command line flag
-      # @option args [String] :override_env An environment variable used to override the flag value
+      # adds command line options to be used in a command
+      # @param       [Hash]    *args hashes of information about the command line option
+      # @option args [String]  :name The command line option
+      # @option args [String]  :value The value for the command line option
+      # @option args [String]  :message A message describing the use of this command line option
+      # @option args [String]  :override_env An environment variable used to override the option value
       # @option args [Boolean] :required Indicates whether an error should be raised
-      # if the value is nil or empty string, vs not including the flag.
+      # if the value is nil or empty string, vs not including the option.
       #
       # for block {|a| ... }
-      # @yield [a] Optional block syntax allows you to specify information about the command line flag, available methods track hash keys
-      def add_flag(*args, &block)
-        raise ArgumentError.new("add_flag takes a block or a hash") if !args.empty? && block_given?
+      # @yield [a] Optional block syntax allows you to specify information about the command line option,
+      #            available methods track hash keys
+      def add_option(*args, &block)
+        raise ArgumentError.new("add_option takes a block or a hash") if !args.empty? && block_given?
         attributes = [:name, :default, :message, :override_env, :required]
         add_param(@flags, CommandFlag, attributes, args, &block)
       end
+      alias_and_deprecate :add_flag, :add_option
 
       # adds command to be executed by task
-      # @param [Hash] args hash of information about the command to be executed
-      # @option arg [String] :name The command to be executed
-      # @option arg [String] :override_env An environment variable used to override the command to be executed by the task
+      # @param      [Hash]   args          hash of information about the command to be executed
+      # @option arg [String] :name         The command to be executed
+      # @option arg [String] :override_env An environment variable used to override the command
+      #                                    to be executed by the task
       #
       # for block {|a| ... }
       # @yield [a] Optional block syntax allows you to specify information about command, available methods track hash keys
@@ -122,7 +128,7 @@ module Rototiller
       def define(args, &task_block)
         # Default task description
         # can be overridden with standard 'desc' DSL method
-        desc 'RototillerTask: A Task with optional environment-variable and command-flag tracking' unless ::Rake.application.last_description
+        desc 'RototillerTask: A Task with optional environment-variable and command-option tracking' unless ::Rake.application.last_description
 
         task(@name, *args) do |_, task_args|
           RakeFileUtils.__send__(:verbose, @verbose) do
