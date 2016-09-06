@@ -173,8 +173,3 @@ Next start the yard server
     $) bundle exec yard server
 
 Finally navigate to http://0.0.0.0:8808/ to view the documentation
-
-## Maintainers
-* [Zach Reichert](zach.reichert@puppetlabs.com), github:[zreichert](https://github.com/zreichert), jira:zach.reichert
-* [Eric Thompson](erict@puppetlabs.com), github:[er0ck](https://github.com/er0ck), jira:erict
-* [QA](qa-team@puppetlabs.com)
