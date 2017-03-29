@@ -159,22 +159,24 @@ module Rototiller
       def run
         # make this look a bit like beaker's result class
         #   we may have to convert this to a class if it gets complex
+        # QA-2851: DO NOT use open3, Kernel#`, %x{}, Kernel#exec to run the command
+        #   Kernel#exec doesn't return.  the others do not pass execution to a sub-shell to allow user interaction
+        #     we need to use system here so a user can arbitrarily interact with the process
+        #     (if they put a pry breakpoint in the downstream code, for instance)
+        #   because we used to return meaningful output, and pid, this is a breaking change
         @result = Result.new
         @result.output = ''
-        # add ';' to command string as it is a metacharacter that forces open3
-        #   to send the command to the shell. This returns the correct
-        #   exit_code and stderr, etc when the command is not found
-        Open3.popen2e(self.to_str + ";"){|stdin, stdout_err, wait_thr|
-          stdout_err.each { |line| puts line
-                            @result.output << line }
-          @result.pid    = wait_thr.pid # pid of the started process.
-          @result.exit_code = wait_thr.value.exitstatus # Process::Status object returned.
-        }
+        command_found = system(self.to_str)
+        @result.pid = $?.pid
+        @result.exit_code = $?.exitstatus
+        unless command_found
+          @result.output    = 'doesnotexist: command not found'
+        end
 
         if block_given? # if block, send result to the block
           yield @result
         end
-        @result
+        return @result
       end
 
       # Does this param require the task to stop

@@ -163,7 +163,7 @@ module Rototiller::Task
             end
             expect(task).to receive(:exit)
             expect{ described_run_task }
-              .to output(/my_shiny_new_command:( command)? not found/)
+              .to output(/my_shiny_new_command/)
               .to_stdout
           end
           it 'can override command name with env_var in block as hash' do
@@ -178,7 +178,7 @@ module Rototiller::Task
             # not sure why this is calling exit twice
             expect(task).to receive(:exit)
             expect{ described_run_task }
-              .to output(/my_shiny_new_command:( command)? not found/)
+              .to output(/my_shiny_new_command/)
               .to_stdout
           end
           it 'raises an error when supplied a bad key' do
