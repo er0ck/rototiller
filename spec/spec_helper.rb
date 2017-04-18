@@ -1,8 +1,8 @@
 if ENV["COVERAGE"]
   require 'simplecov'
   SimpleCov.start do
-    add_filter '/spec/'
-    add_filter '.bundle/gems'
+    add_filter 'spec/'
+    add_filter 'acceptance/'
   end
 end
 
