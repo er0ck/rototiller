@@ -13,7 +13,7 @@ def location_for(place, fake_version = nil)
 end
 
 # unit tests: --without system_tests development
-gem 'rake'
+gem 'rake',       *location_for(ENV['RAKE_VERSION'])
 gem "rototiller", *location_for(ENV['TILLER_VERSION'] || '~> 0.1.0')
 gem 'rspec'                  ,'~> 3.4.0'
 
